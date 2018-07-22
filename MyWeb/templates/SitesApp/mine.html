@@ -1,0 +1,69 @@
+{% extends 'SitesApp/base.html' %}
+
+ {% block title %}
+     <title>我的</title>
+ {% endblock %}
+{% block link %}
+    {{ block.super }}
+<link rel="icon" type="image/x-icon" href="/static/uploads/{{ user.uIcon }}">
+{% endblock %}
+{% block style %}
+   <style type="text/css">
+   .content ul{
+
+       list-style: none;
+       width: 200px;
+       margin: 0 auto;
+       text-align: center;
+   }
+   .content li{
+       list-style: none;
+       text-align: left;
+       margin: 0 0 0 20px;
+   }
+   .content img{
+       border-radius: 50%;
+       width: 150px;
+       background: rebeccapurple;
+   }
+   </style>
+{% endblock %}
+{% block content %}
+{#   文件上传、验证码、密码加密、会话技术#}
+    <div>
+        <h2>welcome {{ user.uName }}</h2>
+            <img src="/static/uploads/{{ user.uIcon }}"  alt="..." title="更改头像" >
+        <ul >
+            <li>name:{{ user.uName }}</li>
+            <li>nickname:{{ user.uNickname }}</li>
+            <li>age:{{ user.uAge }}</li>
+            <li>Email:{{ user.uEmail }}</li>
+            <li>gender:{{ user.uGender }}</li>
+        </ul>
+
+    </div>
+    <form id="formLogin" method="post" action="{% url 'sitesApp:logout' %}">
+    {% csrf_token %}
+        <input  type="submit" class="loginBtn" value="退  出"><br>
+    </form>
+{% endblock %}
+{% block script %}
+    {{ block.super }}
+    <script src="/static/SitesApp/js/jquery-form.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+           $("#formLogin").ajaxForm(function(data){
+{#                 alert("post success." + data['status']);#}
+               data = $.parseJSON(data);
+                 if(data['status'] == '1'){
+{#                        alert('退出成功');#}
+                        window.location.href ="{% url 'sitesApp:home' %}";
+                 }else {
+                     alert("退出失败，请检查输入信息!!!");
+                 }
+           });
+        });
+    </script>
+
+{% endblock %}

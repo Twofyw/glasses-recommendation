@@ -1,0 +1,23 @@
+
+
+{% extends 'SitesApp/base.html' %}
+
+ {% block title %}
+     <title>输入照片</title>
+ {% endblock %}
+
+<!-- <form action="{% url 'polls:vote' question.id %}" method="post">
+    {% csrf_token %}
+    {% for choice in question.choice_set.all %}
+        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+    {% endfor %}
+    <input type="submit" value="Vote">
+</form> -->
+
+{% block content %}
+    <form action="{% url 'sitesApp:grade_predict' %}" method="get">
+        <button type='submit'>拍 照(instant snap)</button>
+
+    </form>
+{% endblock %}

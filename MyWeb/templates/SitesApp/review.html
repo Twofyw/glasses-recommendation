@@ -1,0 +1,339 @@
+{% extends 'SitesApp/base.html' %}
+{% block title %}
+    <title>事项办理</title>
+{% endblock %}
+{% block style %}
+    <link href="/static/SitesApp/css/review.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <div class="main">
+        <ul>
+            <li class="items">
+                <h2 style="display: inline-block">已办事项</h2>
+                <button id="archive" value="" title="查看归档事项">归档事项</button>
+                <div class="itemsdiv alreadyRe">
+                    {% for content in contents %}
+                        {% ifequal content.rRemark 0 %}
+                            <button type="button" class="list-group-item topicCotent " data-toggle="modal"
+                                    data-target="#exampleModal"
+                                    data-topic="{{ content.rTopic }}"
+                                    data-remark="0"
+                                    data-type="modify"
+                                    data-id="{{ content.id }}"
+                                    data-rimpo="{{ content.rImpo }}"
+                                    data-url="{% url 'SitesApp:review' %}"
+                                    data-body="{{ content.rContent }}"
+                                    title="{{ content.rTopic }}">
+
+                                <span class="rtopic">{{ content.rTopic }}</span>
+                                <br>
+
+                                {% ifequal  content.rImpo  0 %}<span class="general">一般 </span>{% endifequal %}
+                                {% ifequal  content.rImpo  1 %}<span class="import">重要 </span>{% endifequal %}
+                                {% ifequal  content.rImpo  2 %}<span class="urgency">紧急 </span>{% endifequal %}
+
+                                <span class="showTime">{{ content.rmDateTime }}</span>
+
+                            </button>
+                            <div class="itemBtnDiv">
+                                <strong type="button" class="itemBtn alredayFin"
+                                        onclick="changeRemark(1,{{ content.id }})"
+                                        title="设置成待办事项">重办
+                                </strong>
+                                <strong>|</strong>
+                                <strong type="button" class="itemBtn alredayFin"
+                                        onclick="changeRemark(3,{{ content.id }})"
+                                        title="设置成归档事项">归档
+                                </strong>
+                            </div>
+
+                        {% endifequal %}
+
+                    {% endfor %}
+
+
+                </div>
+                <div class="itemsdiv fileRe" style="display: none">
+                    {% for content in contents %}
+                        {% ifequal content.rRemark 3 %}
+                            <button type="button" class="list-group-item topicCotent" data-toggle="modal"
+                                    data-target="#exampleModal"
+                                    data-topic="{{ content.rTopic }}"
+                                    data-remark="3"
+                                    data-type="modify"
+                                    data-id="{{ content.id }}"
+                                    data-rimpo="{{ content.rImpo }}"
+                                    data-url="{% url 'SitesApp:review' %}"
+                                    data-body="{{ content.rContent }}"
+                                    title="{{ content.rTopic }}">
+
+                                <span class="rtopic">{{ content.rTopic }}</span>
+                                <br>
+
+                                {% ifequal  content.rImpo  0 %}<span class="general">一般 </span>{% endifequal %}
+                                {% ifequal  content.rImpo  1 %}<span class="import">重要 </span>{% endifequal %}
+                                {% ifequal  content.rImpo  2 %}<span class="urgency">紧急 </span>{% endifequal %}
+
+                                <span class="showTime">{{ content.rmDateTime }}</span>
+
+                            </button>
+                            <div class="itemBtnDiv">
+
+                                <strong type="button" class="itemBtn alredayFin"
+                                        onclick="changeRemark(0,{{ content.id }})"
+                                        title="取消归档">取消归档
+                                </strong>
+                            </div>
+                        {% endifequal %}
+
+                    {% endfor %}
+
+                </div>
+
+            </li>
+            <li class="items">
+                <h2>待办事项</h2>
+                <div class="itemsdiv">
+                    <button type="button" class="list-group-item add " data-toggle="modal"
+                            data-target="#exampleModal"
+                            data-remark="1" data-type="add" data-url="{% url 'SitesApp:review' %}" data-rimpo="0"
+                            title="添加待办事项">添加
+                    </button>
+                    {% for content in contents %}
+                        {% ifequal content.rRemark 1 %}
+                            <button type="button" class="list-group-item topicCotent" data-toggle="modal"
+                                    data-target="#exampleModal"
+                                    data-topic="{{ content.rTopic }}"
+                                    data-remark="1"
+                                    data-type="modify"
+                                    data-id="{{ content.id }}"
+                                    data-rimpo="{{ content.rImpo }}"
+                                    data-url="{% url 'SitesApp:review' %}"
+                                    data-body="{{ content.rContent }}"
+                                    title="{{ content.rTopic }}">
+                                <span class="rtopic">{{ content.rTopic }}</span>
+                                <br>
+
+                                {% ifequal  content.rImpo  0 %}<span class="general">一般 </span>{% endifequal %}
+                                {% ifequal  content.rImpo  1 %}<span class="import">重要 </span>{% endifequal %}
+                                {% ifequal  content.rImpo  2 %}<span class="urgency">紧急 </span>{% endifequal %}
+
+                                <span class="showTime">{{ content.rmDateTime }}</span>
+
+                            </button>
+                            <div class="itemBtnDiv">
+                                <strong type="button" class="itemBtn" onclick="changeRemark(0,{{ content.id }})"
+                                        title="设置成已办事项">已办
+                                </strong>
+                                <strong>|</strong>
+                                <strong type="button" class="itemBtn" onclick="changeRemark(2,{{ content.id }})"
+                                        title="设置成事项">计划
+                                </strong>
+                            </div>
+                        {% endifequal %}
+
+                    {% endfor %}
+
+                </div>
+            </li>
+            <li class="items">
+                <h2>远期计划</h2>
+                <div class="itemsdiv">
+                    <button type="button" class="list-group-item add " data-toggle="modal"
+                            data-target="#exampleModal"
+                            data-remark="2" data-type="add" data-url="{% url 'SitesApp:review' %}" data-rimpo="0"
+                            title="添加远期计划">添加
+                    </button>
+                    {% for content in contents %}
+                        {% ifequal content.rRemark 2 %}
+                            <button type="button" class="list-group-item topicCotent" data-toggle="modal"
+                                    data-target="#exampleModal"
+                                    data-topic="{{ content.rTopic }}"
+                                    data-remark="2"
+                                    data-type="modify"
+                                    data-id="{{ content.id }}"
+                                    data-rimpo="{{ content.rImpo }}"
+                                    data-url="{% url 'SitesApp:review' %}"
+                                    data-body="{{ content.rContent }}"
+                                    title="{{ content.rTopic }}">
+
+                            <span class="rtopic">{{ content.rTopic }}</span>
+                            <br>
+
+                            {% ifequal  content.rImpo  0 %}<span class="general">一般 </span>{% endifequal %}
+                            {% ifequal  content.rImpo  1 %}<span class="import">重要 </span>{% endifequal %}
+                            {% ifequal  content.rImpo  2 %}<span class="urgency">紧急 </span>{% endifequal %}
+
+                            <span class="showTime">{{ content.rmDateTime }}</span>
+
+                            </button>
+                            <div class="itemBtnDiv">
+                                <strong type="button" class="itemBtn" onclick="changeRemark(1,{{ content.id }})"
+                                        title="设置成待办事项">待办
+                                </strong>
+                                <strong>|</strong>
+                                <strong type="button" class="itemBtn alredayFin"
+                                        onclick="changeRemark(4,{{ content.id }})"
+                                        title="取消计划">取消
+                                </strong>
+                            </div>
+
+
+
+
+
+
+                        {% endifequal %}
+                    {% endfor %}
+
+                </div>
+            </li>
+        </ul>
+    </div>
+    {% include 'SitesApp/includeModal.html' %}
+{% endblock %}
+{% block script %}
+    {{ block.super }}
+
+
+    <script src="/static/tiny_mce/tiny_mce.js"></script> 
+    <script src="/static/SitesApp/js/jquery-form.js"></script>
+    <script src='/static/SitesApp/js/reviewJs.js'></script>
+     
+    <script type="text/javascript">
+
+        $(function ($) {
+            {#第一次按下归档事项按钮显示归档事项，第二次按下显示已办事项#}
+            var archiveBtnFlag = true;
+            showTimeMode();
+            itemsMode();
+
+            $('#archive').click(function () {
+                {#点击归档事项#}
+                if (archiveBtnFlag) {
+                    $(this).prev().html('归档事项');
+                    $(this).html('已办事项').attr('title', '查看已办事项');
+                    $('.fileRe').css('display', 'block').find('butoon').addClass('topicCotent');
+                    $('.alreadyRe').css('display', 'none').find('butoon').each(function () {
+                        $(this).removeClass('topicCotent');
+
+                    });
+                    archiveBtnFlag = false;
+                } else {
+                    {#点击归档事项#}
+                    $(this).prev().html('已办事项');
+                    $(this).html('归档事项').attr('title', '查看归档事项');
+                    $('.fileRe').css('display', 'none').find('butoon').removeClass('topicCotent');
+                    $('.alreadyRe').css('display', 'block').find('butoon').addClass('topicCotent');
+                    archiveBtnFlag = true;
+                }
+            })
+        });
+
+        {#格式化列表#}
+
+        function itemsMode() {
+            {#格式化列表，如果列表中没有事项，就显示暂无事项#}
+            $(".items").each(function () {
+                item = $(this);
+                topic = item.find(".topicCotent");
+
+                if (topic.length > 8) {
+                    {#alert(item.find('div').css('height'));#}
+                    item.find('div').css({"height": "470px", "overflow": "auto"});
+                    {#alert(item.find('div').css('height'));#}
+                }
+                if ($('.fileRe').find('button').length == 0) {
+                    $('.fileRe').html('<span type="button" class="list-group-item add" >暂无</span>');
+                }
+                if ($('.alreadyRe').find('button').length == 0) {
+                    $('.alreadyRe').html('<span type="button" class="list-group-item add" >暂无</span>');
+                }
+
+            });
+
+        }
+
+        {#事项类型改变事件#}
+
+        function changeRemark(rid, id) {
+            var url = "{% url 'SitesApp:review' %}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {"id": id, "remark": rid, "changeRemark": rid},
+                dataType: "json",
+                success: function (res) {
+                    {#alert(res['ret']);#}
+                    window.location.href = url;
+                }
+            });
+        }
+
+        {#显示时间格式#}
+
+        function showTimeMode() {
+            {#格式化时间，显示为刚发表、几小时前，几天前#}
+            var showTIme = document.getElementsByClassName("showTime");
+            var ret;
+            for (var i = 0; i < showTIme.length; i++) {
+                ret = diaplayTime(showTIme[i].textContent);
+                showTIme[i].innerHTML = ret;
+            }
+        }
+
+        {#时间格式整理#}
+
+        function diaplayTime(data) {
+            data = data.replace(/年/, "/");
+            data = data.replace(/月/, "/");
+            data = data.replace(/日/, "/");
+            var str = data;
+            //将字符串转换成时间格式
+            var timePublish = new Date(str);
+
+            var timeNow = new Date();
+            var minute = 1000 * 60;
+            var hour = minute * 60;
+            var day = hour * 24;
+            var month = day * 30;
+            var diffValue = timeNow - timePublish;
+            var diffMonth = diffValue / month;
+            var diffWeek = diffValue / (7 * day);
+            var diffDay = diffValue / day;
+            var diffHour = diffValue / hour;
+            var diffMinute = diffValue / minute;
+            {#alert(diffDay);#}
+
+            if (diffValue < 0) {
+                alert("错误时间");
+            }
+            else if (diffMonth > 3) {
+                result = timePublish.getFullYear() + "-";
+                result += timePublish.getMonth() + "-";
+                result += timePublish.getDate();
+                {#alert(result);#}
+            }
+            else if (diffMonth > 1) {
+                result = parseInt(diffMonth) + "月前";
+            }
+            else if (diffWeek > 1) {
+                result = parseInt(diffWeek) + "周前";
+            }
+            else if (diffDay > 1) {
+                result = parseInt(diffDay) + "天前";
+            }
+            else if (diffHour > 1) {
+                result = parseInt(diffHour) + "小时前";
+            }
+            else if (diffMinute > 1) {
+                result = parseInt(diffMinute) + "分钟前";
+            }
+            else {
+                result = "刚发表";
+            }
+            return result;
+        }
+
+    </script>
+{% endblock %}
